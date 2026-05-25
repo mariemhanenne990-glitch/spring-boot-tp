@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Produits</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        h1 { color: #333; font-size: 26px; }
+        .btn-add {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover { background: #f9f9f9; }
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🛍️ Liste des Produits</h1>
+        <div>
+            <a href="/products/add" class="btn-add">+ Ajouter</a>
+            &nbsp;
+            <form th:action="@{/logout}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit" class="btn-logout">
+                    Déconnexion
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prix (MRU)</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        <tr th:if="${#lists.isEmpty(products)}">
+            <td colspan="5" class="no-data">
+                Aucun produit trouvé.
+            </td>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price} +  'MRU'"></td>
+            <td th:text="${product.description}"></td>
+            <td>
+                <a th:href="@{/products/delete/{id}(id=${product.id})}"
+                   class="btn-delete">
+                    Supprimer
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

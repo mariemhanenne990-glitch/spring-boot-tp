@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ajouter Produit</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        h1 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 22px;
+            text-align: center;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-back {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="form-box">
+    <h1>➕ Ajouter un Produit</h1>
+
+    <form th:action="@{/products/add}"
+          th:object="${product}"
+          method="post">
+
+        <input type="text"
+               th:field="*{name}"
+               placeholder="Nom du produit"/>
+
+        <input type="number"
+               th:field="*{price}"
+               placeholder="Prix"
+               step="0.01"/>
+
+        <input type="text"
+               th:field="*{description}"
+               placeholder="Description"/>
+
+        <button type="submit" class="btn-submit">
+            Ajouter
+        </button>
+    </form>
+
+    <a href="/products" class="btn-back">
+        ← Retour à la liste
+    </a>
+</div>
+</body>
+</html>
