@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Articles</title>
+</head>
+<body>
+<h1>📝 Liste des Articles</h1>
+
+<a th:href="@{/articles/new}">➕ Nouvel Article</a>
+<a th:href="@{/products}">← Retour Produits</a>
+<hr/>
+
+<div th:each="article : ${articles}">
+    <h3>
+        <a th:href="@{/articles/{id}(id=${article.id})}"
+           th:text="${article.title}">Titre</a>
+    </h3>
+
+    <form th:action="@{/articles/delete/{id}(id=${article.id})}"
+          method="post" style="display:inline">
+        <button type="submit">🗑 Supprimer</button>
+    </form>
+    <hr/>
+</div>
+</body>
+</html>
