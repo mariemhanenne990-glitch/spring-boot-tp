@@ -2,20 +2,68 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Nouvel Article</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        h1 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 22px;
+            text-align: center;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-back {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-<h1>✏️ Créer un Article</h1>
+<div class="form-box">
+    <h1>✏️ Créer un Article</h1>
 
-<form th:action="@{/articles}" th:object="${article}" method="post">
-    <label>Titre :</label><br/>
-    <input type="text" th:field="*{title}"/><br/><br/>
+    <form th:action="@{/articles}" th:object="${article}" method="post">
+        <input type="text" th:field="*{title}" placeholder="Titre"/>
+        <textarea th:field="*{content}" rows="5" placeholder="Contenu..."></textarea>
+        <button type="submit" class="btn-submit">Publier</button>
+    </form>
 
-    <label>Contenu :</label><br/>
-    <textarea th:field="*{content}" rows="5" cols="40"></textarea><br/><br/>
-
-    <button type="submit">Publier</button>
-</form>
-
-<a th:href="@{/articles}">← Retour</a>
+    <a th:href="@{/articles}" class="btn-back">← Retour</a>
+</div>
 </body>
 </html>

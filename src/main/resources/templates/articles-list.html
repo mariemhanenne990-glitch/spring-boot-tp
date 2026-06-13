@@ -2,25 +2,106 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Articles</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        h1 { color: #333; font-size: 26px; }
+        .btn-add, .btn-back {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back { background: #555; margin-left: 8px; }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover { background: #f9f9f9; }
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-view {
+            background: #3498db;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+    </style>
 </head>
 <body>
-<h1>📝 Liste des Articles</h1>
+<div class="container">
+    <div class="header">
+        <h1>📝 Liste des Articles</h1>
+        <div>
+            <a th:href="@{/articles/new}" class="btn-add">+ Nouvel Article</a>
+            <a th:href="@{/products}" class="btn-back">← Produits</a>
+        </div>
+    </div>
 
-<a th:href="@{/articles/new}">➕ Nouvel Article</a>
-<a th:href="@{/products}">← Retour Produits</a>
-<hr/>
-
-<div th:each="article : ${articles}">
-    <h3>
-        <a th:href="@{/articles/{id}(id=${article.id})}"
-           th:text="${article.title}">Titre</a>
-    </h3>
-
-    <form th:action="@{/articles/delete/{id}(id=${article.id})}"
-          method="post" style="display:inline">
-        <button type="submit">🗑 Supprimer</button>
-    </form>
-    <hr/>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Titre</th>
+            <th>Action</th>
+        </tr>
+        <tr th:if="${#lists.isEmpty(articles)}">
+            <td colspan="3" class="no-data">Aucun article trouvé.</td>
+        </tr>
+        <tr th:each="article : ${articles}">
+            <td th:text="${article.id}"></td>
+            <td th:text="${article.title}"></td>
+            <td>
+                <a th:href="@{/articles/{id}(id=${article.id})}" class="btn-view">Voir</a>
+                <form th:action="@{/articles/delete/{id}(id=${article.id})}"
+                      method="post" style="display:inline">
+                    <button type="submit" class="btn-delete">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>
