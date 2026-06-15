@@ -1,4 +1,4 @@
-package com.EXO1.demo.security;
+package com.EX01.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +19,20 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/products/add", "/products/delete/**")
-                        .hasRole("ADMIN")
+                        // ADMIN فقط - إضافة وحذف للمنتجات والمقالات
+                        .requestMatchers(
+                                "/products/add",
+                                "/products/delete/**",
+                                "/articles/add",
+                                "/articles/delete/**",
+                                "/articles/*/comment"
+                        ).hasRole("ADMIN")
+                        // USER و ADMIN - عرض فقط
+                        .requestMatchers(
+                                "/products",
+                                "/articles",
+                                "/articles/*"
+                        ).hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -38,12 +50,14 @@ public class SecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
+        // ADMIN - يشوف + يضيف + يحذف
         UserDetails admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder().encode("admin123"))
                 .roles("ADMIN")
                 .build();
 
+        // USER - يشوف ويشتري فقط
         UserDetails user = User.builder()
                 .username("user")
                 .password(passwordEncoder().encode("user123"))

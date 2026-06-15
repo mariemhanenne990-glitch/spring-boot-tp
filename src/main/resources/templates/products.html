@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Produits</title>
     <style>
@@ -69,15 +70,46 @@
             padding: 30px;
             color: #999;
         }
+        .role-badge {
+            background: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>🛍️ Liste des Produits</h1>
         <div>
-            <a th:href="@{/articles}" class="btn-add" style="background:#3498db;">📝 Articles</a>
-            <a href="/products/add" class="btn-add">+ Ajouter</a>
+            <h1>🛍️ Liste des Produits</h1>
+            <!-- عرض اسم المستخدم ودوره -->
+            <small>
+                Connecté en tant que :
+                <span class="role-badge" sec:authorize="hasRole('ADMIN')">
+                    👑 ADMIN
+                </span>
+                <span class="role-badge" sec:authorize="hasRole('USER')">
+                    👤 USER
+                </span>
+                <span sec:authentication="name"></span>
+            </small>
+        </div>
+
+        <div>
+            <a th:href="@{/articles}"
+               class="btn-add"
+               style="background:#3498db;">
+                📝 Articles
+            </a>
+
+            <!-- زر Ajouter - للـ ADMIN فقط -->
+            <span sec:authorize="hasRole('ADMIN')">
+                <a href="/products/add" class="btn-add">+ Ajouter</a>
+            </span>
+
             &nbsp;
             <form th:action="@{/logout}"
                   method="post"
@@ -95,7 +127,8 @@
             <th>Nom</th>
             <th>Prix (MRU)</th>
             <th>Description</th>
-            <th>Action</th>
+            <!-- عمود Action للـ ADMIN فقط -->
+            <th sec:authorize="hasRole('ADMIN')">Action</th>
         </tr>
         <tr th:if="${#lists.isEmpty(products)}">
             <td colspan="5" class="no-data">
@@ -105,9 +138,10 @@
         <tr th:each="product : ${products}">
             <td th:text="${product.id}"></td>
             <td th:text="${product.name}"></td>
-            <td th:text="${product.price} +  'MRU'"></td>
+            <td th:text="${product.price} + ' MRU'"></td>
             <td th:text="${product.description}"></td>
-            <td>
+            <!-- زر Supprimer للـ ADMIN فقط -->
+            <td sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/products/delete/{id}(id=${product.id})}"
                    class="btn-delete">
                     Supprimer
