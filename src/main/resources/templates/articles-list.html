@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Articles</title>
     <style>
@@ -33,6 +34,16 @@
             font-size: 14px;
         }
         .btn-back { background: #555; margin-left: 8px; }
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 8px;
+        }
         table { width: 100%; border-collapse: collapse; }
         th {
             background: #4CAF50;
@@ -40,10 +51,7 @@
             padding: 12px;
             text-align: left;
         }
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
         tr:hover { background: #f9f9f9; }
         .btn-delete {
             background: #e74c3c;
@@ -64,20 +72,42 @@
             font-size: 13px;
             margin-right: 5px;
         }
-        .no-data {
-            text-align: center;
-            padding: 30px;
-            color: #999;
+        .no-data { text-align: center; padding: 30px; color: #999; }
+        .role-badge {
+            background: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>📝 Liste des Articles</h1>
         <div>
-            <a th:href="@{/articles/new}" class="btn-add">+ Nouvel Article</a>
+            <h1>📝 Liste des Articles</h1>
+            <small>
+                <span class="role-badge"
+                      sec:authorize="hasRole('ADMIN')">👑 ADMIN</span>
+                <span class="role-badge"
+                      sec:authorize="hasRole('USER')">👤 USER</span>
+                <span sec:authentication="name"></span>
+            </small>
+        </div>
+        <div>
+            <!-- Ajouter - للـ ADMIN فقط -->
+            <span sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/articles/add}" class="btn-add">
+                    + Nouvel Article
+                </a>
+            </span>
+
             <a th:href="@{/products}" class="btn-back">← Produits</a>
+
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn-logout">Déconnexion</button>
+            </form>
         </div>
     </div>
 
@@ -85,19 +115,27 @@
         <tr>
             <th>ID</th>
             <th>Titre</th>
-            <th>Action</th>
+            <th>Voir</th>
+            <!-- عمود Supprimer للـ ADMIN فقط -->
+            <th sec:authorize="hasRole('ADMIN')">Supprimer</th>
         </tr>
         <tr th:if="${#lists.isEmpty(articles)}">
-            <td colspan="3" class="no-data">Aucun article trouvé.</td>
+            <td colspan="4" class="no-data">Aucun article trouvé.</td>
         </tr>
         <tr th:each="article : ${articles}">
             <td th:text="${article.id}"></td>
             <td th:text="${article.title}"></td>
             <td>
-                <a th:href="@{/articles/{id}(id=${article.id})}" class="btn-view">Voir</a>
+                <a th:href="@{/articles/{id}(id=${article.id})}"
+                   class="btn-view">Voir</a>
+            </td>
+            <!-- Supprimer للـ ADMIN فقط -->
+            <td sec:authorize="hasRole('ADMIN')">
                 <form th:action="@{/articles/delete/{id}(id=${article.id})}"
                       method="post" style="display:inline">
-                    <button type="submit" class="btn-delete">Supprimer</button>
+                    <button type="submit" class="btn-delete">
+                        Supprimer
+                    </button>
                 </form>
             </td>
         </tr>
