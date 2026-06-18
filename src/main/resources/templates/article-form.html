@@ -57,7 +57,7 @@
 <div class="form-box">
     <h1>✏️ Créer un Article</h1>
 
-    <form th:action="@{/articles}" th:object="${article}" method="post">
+    <form th:action="@{/articles/add}" th:object="${article}" method="post">
         <input type="text" th:field="*{title}" placeholder="Titre"/>
         <textarea th:field="*{content}" rows="5" placeholder="Contenu..."></textarea>
         <button type="submit" class="btn-submit">Publier</button>
