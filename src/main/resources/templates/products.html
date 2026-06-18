@@ -65,6 +65,16 @@
             text-decoration: none;
             font-size: 13px;
         }
+        .btn-buy {
+            background: #f39c12;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-buy:hover { background: #e67e22; }
         .no-data {
             text-align: center;
             padding: 30px;
@@ -85,15 +95,14 @@
     <div class="header">
         <div>
             <h1>🛍️ Liste des Produits</h1>
-            <!-- عرض اسم المستخدم ودوره -->
             <small>
                 Connecté en tant que :
                 <span class="role-badge" sec:authorize="hasRole('ADMIN')">
-                    👑 ADMIN
-                </span>
+                   👑 ADMIN
+               </span>
                 <span class="role-badge" sec:authorize="hasRole('USER')">
-                    👤 USER
-                </span>
+                   👤 USER
+               </span>
                 <span sec:authentication="name"></span>
             </small>
         </div>
@@ -105,10 +114,10 @@
                 📝 Articles
             </a>
 
-            <!-- زر Ajouter - للـ ADMIN فقط -->
+            <!-- زر Ajouter للـ ADMIN فقط -->
             <span sec:authorize="hasRole('ADMIN')">
-                <a href="/products/add" class="btn-add">+ Ajouter</a>
-            </span>
+               <a href="/products/add" class="btn-add">+ Ajouter</a>
+           </span>
 
             &nbsp;
             <form th:action="@{/logout}"
@@ -127,11 +136,11 @@
             <th>Nom</th>
             <th>Prix (MRU)</th>
             <th>Description</th>
-            <!-- عمود Action للـ ADMIN فقط -->
+            <th>Acheter</th>
             <th sec:authorize="hasRole('ADMIN')">Action</th>
         </tr>
         <tr th:if="${#lists.isEmpty(products)}">
-            <td colspan="5" class="no-data">
+            <td colspan="6" class="no-data">
                 Aucun produit trouvé.
             </td>
         </tr>
@@ -140,6 +149,13 @@
             <td th:text="${product.name}"></td>
             <td th:text="${product.price} + ' MRU'"></td>
             <td th:text="${product.description}"></td>
+            <!-- زر شراء للكل -->
+            <td>
+                <button class="btn-buy"
+                        onclick="alert('✅ Achat effectué avec succès!')">
+                    🛒 Acheter
+                </button>
+            </td>
             <!-- زر Supprimer للـ ADMIN فقط -->
             <td sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/products/delete/{id}(id=${product.id})}"

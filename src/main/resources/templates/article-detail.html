@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Article</title>
     <style>
@@ -54,6 +55,26 @@
             font-size: 16px;
             cursor: pointer;
         }
+        .btn-buy {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .btn-buy:hover { background: #e67e22; }
+        .divider {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -63,20 +84,42 @@
     <h1 th:text="${article.title}">Titre</h1>
     <p class="content" th:text="${article.content}">Contenu</p>
 
-    <h2>💬 Commentaires (<span th:text="${article.comments.size()}">0</span>)</h2>
+    <!-- زر الشراء للـ USER والـ ADMIN -->
+    <button class="btn-buy"
+            onclick="alert('✅ Achat effectué avec succès!')">
+        🛒 Acheter cet article
+    </button>
+
+    <hr class="divider"/>
+
+    <h2>💬 Commentaires
+        (<span th:text="${article.comments.size()}">0</span>)
+    </h2>
 
     <div th:each="comment : ${article.comments}" class="comment">
         <b th:text="${comment.author}">Auteur</b>
         <p th:text="${comment.text}">Texte</p>
     </div>
 
-    <h3>Ajouter un commentaire</h3>
-    <form th:action="@{/comments/add/{id}(id=${article.id})}"
-          th:object="${newComment}" method="post">
-        <input type="text" th:field="*{author}" placeholder="Nom"/>
-        <textarea th:field="*{text}" rows="3" placeholder="Votre commentaire..."></textarea>
-        <button type="submit" class="btn-submit">Envoyer</button>
-    </form>
+    <!-- تعليق للـ ADMIN فقط -->
+    <div sec:authorize="hasRole('ADMIN')">
+        <h3>✏️ Ajouter un commentaire</h3>
+        <form th:action="@{/comments/add/{id}(id=${article.id})}"
+              th:object="${newComment}" method="post">
+            <input type="text" th:field="*{author}" placeholder="Nom"/>
+            <textarea th:field="*{text}" rows="3"
+                      placeholder="Votre commentaire..."></textarea>
+            <button type="submit" class="btn-submit">Envoyer</button>
+        </form>
+    </div>
+
+    <!-- رسالة للـ USER -->
+    <div sec:authorize="hasRole('USER')">
+        <p style="color:#999; text-align:center; margin-top:15px;">
+            💡 Connectez-vous en tant qu'admin pour ajouter des commentaires.
+        </p>
+    </div>
+
 </div>
 </body>
 </html>
