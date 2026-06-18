@@ -98,7 +98,7 @@
         <div>
             <!-- Ajouter - للـ ADMIN فقط -->
             <span sec:authorize="hasRole('ADMIN')">
-                <a th:href="@{/articles/add}" class="btn-add">
+                <a th:href="@{/articles/new}" class="btn-add">
                     + Nouvel Article
                 </a>
             </span>
